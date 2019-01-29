@@ -3,7 +3,7 @@
 
 ## Face Recognition
 <pre><code>~~~</pre></code>
-
+- - -
 
 ## Facial Expression Recognition
 #### Datasets
@@ -33,6 +33,6 @@ $ python split_data.py</pre></code>
 
 #### Train
 <pre><code>~~~</pre></code>
-
+- - -
 ## Cycle GAN
 <pre><code>~~~</pre></code>
