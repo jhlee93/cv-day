@@ -3,3 +3,6 @@ fer2013.csv
 .DS_Store
 checkpoint/
 upload/
+*.png
+*.mp4
+*.hdf5

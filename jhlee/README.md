@@ -2,7 +2,7 @@
 ###### jaehyeon lee, dongho hwang, cheonghwa kim, songwon lim
 
 ## Face Recognition
-<pre><code>~~~</pre></code>
+<pre><code>haarcascade_frontalface_default.xml</pre></code>
 - - -
 
 ## Facial Expression Recognition
@@ -31,8 +31,22 @@ Place "fer2013.csv" near "split_data.py".
 
 $ python split_data.py</pre></code>
 
-#### Train
-<pre><code>~~~</pre></code>
+#### How to use FERModule ?
+1. setting [fer.py] path
+2. FERModule Definition [FERM = FERMoudle()]
+3. Load Network [FERM.load_network()]
+4. Run [FERM.run()]
+5. Result Dictionary
+6. Example
+    <pre><code>result = FERM.run()
+    result = {'best': 'neutral',
+              'angry': '13.68',
+              'disgust': '0.00',
+              'scared': '20.48',
+              'happy': '1.13',
+              'sad': '6.43',
+              'surprised': '0.91',
+              'neutral':'57.38'}</pre></code>
 - - -
 ## Cycle GAN
 <pre><code>~~~</pre></code>
