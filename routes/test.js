@@ -9,7 +9,7 @@ const options = {
   mode: 'text',
   pythonPath: "C:/Users/S170710A/Anaconda3/envs/racing/python.exe",
   pythonOptions: ['-u'],
-  scriptPath: 'D:/Lab/코드/python/cheonghwa/',    // 실행할 py 파일 path. 현재 nodejs파일과 같은 경로에 있어 생략
+  scriptPath: 'cheonghwa/',    // 실행할 py 파일 path. 현재 nodejs파일과 같은 경로에 있어 생략
   args: null
 };
 var pyshell = new PythonShell('main.py',options);
@@ -58,7 +58,7 @@ var filename;
 
 var storage = multer.diskStorage({
   destination: function (req,file,cb) {
-    cb(null,'../../pytest/');
+    cb(null,'./public/upload/');
   },
   filename: function (req,file,cb) {
     var ip = req.headers['x-forwarded-for'] ||
@@ -96,7 +96,7 @@ var upload = multer({
   }
 });
 
-router.use(express.static('../../pytest/'));
+router.use(express.static('./public/upload/'));
 
 router.get('/', function(req, res, next) {
   res.render('test');

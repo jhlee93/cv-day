@@ -8,9 +8,9 @@ from collections import namedtuple
 parser = argparse.ArgumentParser(description='')
 parser.add_argument('--dataset_dir', dest='dataset_dir', default='summer2winter_yosemite', help='path of the dataset')
 parser.add_argument('--which_direction', dest='which_direction', default='AtoB', help='AtoB or BtoA')
-parser.add_argument('--test_dir', dest='test_dir', default='D:/Lab/코드/python/cheonghwa/test', help='test sample are saved here')
+parser.add_argument('--test_dir', dest='test_dir', default='./cheonghwa/test', help='test sample are saved here')
 parser.add_argument('--new_file', dest='new_file', default='1.jpg', help='test sample are saved here')
-parser.add_argument('--checkpoint_dir', dest='checkpoint_dir', default='D:/Lab/코드/python/cheonghwa/checkpoint', help='models are saved here')
+parser.add_argument('--checkpoint_dir', dest='checkpoint_dir', default='./cheonghwa/checkpoint', help='models are saved here')
 
 parser.add_argument('--epoch', dest='epoch', type=int, default=200, help='# of epoch')
 parser.add_argument('--epoch_step', dest='epoch_step', type=int, default=100, help='# of epoch to decay lr')

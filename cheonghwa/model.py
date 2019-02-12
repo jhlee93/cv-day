@@ -155,7 +155,7 @@ class cyclegan(object):
             #새로운 파일
             new_file_name = './datasets/{}/' + self.new_file
             if args.which_direction == 'AtoB':
-                sample_files = ['D:/Lab/pytest/'+lines[0]+'.'+lines[1]]
+                sample_files = ['./public/upload/'+lines[0]+'.'+lines[1]]
             elif args.which_direction == 'BtoA':
 
                 sample_files = glob(new_file_name.format(self.dataset_dir + '/testB'))
@@ -176,7 +176,7 @@ class cyclegan(object):
             print('Processing image: ' + sample_files[0])
             sample_image = [load_test_data(sample_files[0], args.fine_size)]
             sample_image = np.array(sample_image).astype(np.float32)
-            image_path = 'D:/Lab/pytest/'+lines[0]+'_result.'+lines[1]
+            image_path = './public/upload/'+lines[0]+'_result.'+lines[1]
             fake_img = self.sess.run(out_var, feed_dict={in_var: sample_image})
             save_images(fake_img, [1, 1], image_path)
             index.write("<td>%s</td>" % os.path.basename(image_path))
