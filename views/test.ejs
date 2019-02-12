@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test Page</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <script>
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+      history.go(1);
+    }
+  </script>
+</head>
+<body>
+<div class="center filebox">
+  <h1><a href="http://cvlab310.iptime.org:3000/"/>Test Page</a></h1>
+  <p>사진을 제출해주세요</p>
+  <form action='/test/receive' method='post' enctype="multipart/form-data">
+    <label for="ex_file">업로드</label>
+    <input type="file" name="userfile" id="ex_file"><br><br>
+    <input type="submit" value="제출">
+  </form>
+</div>
+</body>
+</html>

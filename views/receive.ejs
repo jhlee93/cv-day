@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Submit</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <h1><a href="http://cvlab310.iptime.org:3000/"/>당신이 제출한 사진은</a> </h1>
+    <div class="center" style="position: relative; right: 0px; bottom: 0px;">
+      <img src="../<%= filenamedir %>" width="192" height="108">
+
+    <br>uploaded : <%= filename %></div>
+    <br><h2>서버에 저장된 이미지들</h2>
+      <% for(var i=0; i<length; i++){ %>
+          <img src="../<%= filelist[i] %>" width="192" height="108">
+      <% } %>
+
+
+    </form>
+  </body>
+</html>
