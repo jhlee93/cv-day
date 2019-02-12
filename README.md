@@ -2,8 +2,8 @@
 ###### jaehyeon lee, dongho hwang, cheonghwa kim, songwon lim
 
 ## Face Recognition
-<pre><code>~~~</pre></code>
-
+<pre><code>haarcascade_frontalface_default.xml</pre></code>
+- - -
 
 ## Facial Expression Recognition
 #### Datasets
@@ -31,8 +31,8 @@ Place "fer2013.csv" near "split_data.py".
 
 $ python split_data.py</pre></code>
 
-#### Train
+#### Test
 <pre><code>~~~</pre></code>
-
+- - -
 ## Cycle GAN
 <pre><code>~~~</pre></code>
