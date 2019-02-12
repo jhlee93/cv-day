@@ -1,0 +1,46 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: black;
+  text-decoration: none;
+}
+
+a:active{color: dimgray;}
+a:hover{color: darkgray;}
+
+h1{
+  text-align: center;
+}
+
+.center{
+  text-align: center;
+}
+
+body { background-color: lightyellow; }
+
+.filebox label {
+  display: inline-block;
+  padding: .5em .75em;
+  color: white;
+  font-size: inherit;
+  line-height: normal;
+  vertical-align: middle;
+  background-color: mediumblue;
+  cursor: pointer;
+  border: 1px solid #ebebeb;
+  border-bottom-color: #e2e2e2;
+  border-radius: .25em;
+}
+.filebox input[type="file"] { /* 파일 필드 숨기기 */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
