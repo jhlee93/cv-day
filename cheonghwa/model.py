@@ -5,6 +5,7 @@ from glob import glob
 import tensorflow as tf
 import numpy as np
 from collections import namedtuple
+import random
 
 from module import *
 from utils import *
@@ -17,9 +18,11 @@ class cyclegan(object):
         self.input_c_dim = args.input_nc
         self.output_c_dim = args.output_nc
         self.L1_lambda = args.L1_lambda
-        self.dataset_dir = args.dataset_dir
+        self.which_expression = args.which_expression
         self.new_file = args.new_file
+        self.new_file_name = args.new_file_name
         self.checkpoint_dir = args.checkpoint_dir
+        self.more_button = args.more_button
 
         self.discriminator = discriminator
         if args.use_resnet:
@@ -48,15 +51,15 @@ class cyclegan(object):
         self.DB_fake = self.discriminator(self.fake_B, self.options, reuse=False, name="discriminatorB")
         self.DA_fake = self.discriminator(self.fake_A, self.options, reuse=False, name="discriminatorA")
         self.g_loss_a2b = self.criterionGAN(self.DB_fake, tf.ones_like(self.DB_fake)) \
-            + self.L1_lambda * abs_criterion(self.real_A, self.fake_A_) \
-            + self.L1_lambda * abs_criterion(self.real_B, self.fake_B_)
+                          + self.L1_lambda * abs_criterion(self.real_A, self.fake_A_) \
+                          + self.L1_lambda * abs_criterion(self.real_B, self.fake_B_)
         self.g_loss_b2a = self.criterionGAN(self.DA_fake, tf.ones_like(self.DA_fake)) \
-            + self.L1_lambda * abs_criterion(self.real_A, self.fake_A_) \
-            + self.L1_lambda * abs_criterion(self.real_B, self.fake_B_)
+                          + self.L1_lambda * abs_criterion(self.real_A, self.fake_A_) \
+                          + self.L1_lambda * abs_criterion(self.real_B, self.fake_B_)
         self.g_loss = self.criterionGAN(self.DA_fake, tf.ones_like(self.DA_fake)) \
-            + self.criterionGAN(self.DB_fake, tf.ones_like(self.DB_fake)) \
-            + self.L1_lambda * abs_criterion(self.real_A, self.fake_A_) \
-            + self.L1_lambda * abs_criterion(self.real_B, self.fake_B_)
+                      + self.criterionGAN(self.DB_fake, tf.ones_like(self.DB_fake)) \
+                      + self.L1_lambda * abs_criterion(self.real_A, self.fake_A_) \
+                      + self.L1_lambda * abs_criterion(self.real_B, self.fake_B_)
 
         self.fake_A_sample = tf.placeholder(tf.float32,
                                             [None, self.image_size, self.image_size,
@@ -112,7 +115,19 @@ class cyclegan(object):
     def load(self):
         print(" [*] Reading checkpoint...")
 
-        model_dir = "%s_%s" % (self.dataset_dir, self.image_size)
+        background_flag = random.randrange(1, 3)
+
+        if self.which_expression == 'happy' and self.more_button == False:
+            model_dir = "%s_%s" % ('summer2winter_yosemite', self.image_size)
+        elif self.which_expression == 'angry' and self.more_button == False:
+            model_dir = "%s_%s" % ('summer2autumn_yosemite', self.image_size)
+        elif self.which_expression == 'blue' and self.more_button == False:
+            model_dir = "%s_%s" % ('summer2winter_yosemite', self.image_size)
+        else:
+            if background_flag == 1:
+                model_dir = "%s_%s" % ('summer2winter_yosemite', self.image_size)
+            else:
+                model_dir = "%s_%s" % ('summer2autumn_yosemite', self.image_size)
         checkpoint_dir = os.path.join(self.checkpoint_dir, model_dir)
 
         ckpt = tf.train.get_checkpoint_state(checkpoint_dir)
@@ -124,67 +139,60 @@ class cyclegan(object):
         else:
             return False
 
-    def sample_model(self, sample_dir, epoch, idx):
-        dataA = glob('./datasets/{}/*.*'.format(self.dataset_dir + '/testA'))
-        dataB = glob('./datasets/{}/*.*'.format(self.dataset_dir + '/testB'))
-        np.random.shuffle(dataA)
-        np.random.shuffle(dataB)
-        batch_files = list(zip(dataA[:self.batch_size], dataB[:self.batch_size]))
-        sample_images = [load_train_data(batch_file, is_testing=True) for batch_file in batch_files]
-        sample_images = np.array(sample_images).astype(np.float32)
-
-        fake_A, fake_B = self.sess.run(
-            [self.fake_A, self.fake_B],
-            feed_dict={self.real_data: sample_images}
-        )
-        save_images(fake_A, [self.batch_size, 1],
-                    './{}/A_{:02d}_{:04d}.jpg'.format(sample_dir, epoch, idx))
-        save_images(fake_B, [self.batch_size, 1],
-                    './{}/B_{:02d}_{:04d}.jpg'.format(sample_dir, epoch, idx))
-
 
     def test(self, args):
         """Test cyclegan"""
 
-        while 1:
-            print('py ready')
+        direction_flag = random.randrange(1, 3)
 
-            lines = input().split(',')
-            if lines[0] == 99 :
-                break
-            #새로운 파일
-            new_file_name = './datasets/{}/' + self.new_file
-            if args.which_direction == 'AtoB':
-                sample_files = ['./public/upload/'+lines[0]+'.'+lines[1]]
-            elif args.which_direction == 'BtoA':
-
-                sample_files = glob(new_file_name.format(self.dataset_dir + '/testB'))
+        if self.which_expression == 'happy' and self.more_button == False:
+            which_direction = 'BtoA'
+        elif self.which_expression == 'angry' and self.more_button == False:
+            which_direction = 'AtoB'
+        elif self.which_expression == 'blue' and self.more_button == False:
+            which_direction = 'AtoB'
+        else:
+            if direction_flag == 1:
+                which_direction = 'AtoB'
             else:
-                raise Exception('--which_direction must be AtoB or BtoA')
-            print(sample_files)
-            # write html for visual comparison
-            index_path = os.path.join(args.test_dir, '{0}_index.html'.format(args.which_direction))
-            index = open(index_path, "w")
-            index.write("<html><body><table><tr>")
-            index.write("<th>name</th><th>input</th><th>output</th></tr>")
+                which_direction = 'BtoA'
 
-            out_var, in_var = (self.testB, self.test_A) if args.which_direction == 'AtoB' else (
-                self.testA, self.test_B)
+        #새로운 파일
+        sample_files = ['./public/upload/'+self.new_file]
+        #sample_files = ['datasets/' + self.new_file]
 
-            #for sample_file in sample_files:
+        print(sample_files)
+        # write html for visual comparison
+        index_path = os.path.join(args.test_dir, '{0}_index.html'.format(which_direction))
+        index = open(index_path, "w")
+        index.write("<html><body><table><tr>")
+        index.write("<th>name</th><th>input</th><th>output</th></tr>")
 
-            print('Processing image: ' + sample_files[0])
-            sample_image = [load_test_data(sample_files[0], args.fine_size)]
-            sample_image = np.array(sample_image).astype(np.float32)
-            image_path = './public/upload/'+lines[0]+'_result.'+lines[1]
-            fake_img = self.sess.run(out_var, feed_dict={in_var: sample_image})
-            save_images(fake_img, [1, 1], image_path)
-            index.write("<td>%s</td>" % os.path.basename(image_path))
-            index.write("<td><img src='%s'></td>" % (sample_files[0] if os.path.isabs(sample_files[0]) else (
+        out_var, in_var = (self.testB, self.test_A) if which_direction == 'AtoB' else (
+            self.testA, self.test_B)
+
+
+        print('Processing image: ' + sample_files[0])
+        sample_image = [load_test_data(sample_files[0], args.fine_size)]
+        sample_image = np.array(sample_image).astype(np.float32)
+        image_path = './public/upload/'+self.new_file_name
+
+        #image_path = os.path.join(args.test_dir,
+        #                          '{0}_{1}'.format(which_direction, os.path.basename(sample_files[0])))
+        fake_img = self.sess.run(out_var, feed_dict={in_var: sample_image})
+        save_images(fake_img, [1, 1], image_path)
+        index.write("<td>%s</td>" % os.path.basename(image_path))
+        index.write("<td><img src='%s'></td>" % (sample_files[0] if os.path.isabs(sample_files[0]) else (
                 '..' + os.path.sep + sample_files[0])))
-            index.write("<td><img src='%s'></td>" % (image_path if os.path.isabs(image_path) else (
+        index.write("<td><img src='%s'></td>" % (image_path if os.path.isabs(image_path) else (
                 '..' + os.path.sep + image_path)))
-            index.write("</tr>")
-            print ("AtoB_index.html", "r")
-            index.close()
-            print(1)
+        index.write("</tr>")
+        if which_direction == 'AtoB':
+            print("AtoB_index.html", "r")
+        elif which_direction == 'BtoA':
+            print("BtoA_index.html", "r")
+
+        self.more_button = False
+
+        index.close()
+        print(1)
